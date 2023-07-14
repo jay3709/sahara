@@ -1,8 +1,8 @@
 package com.chegg.sahara.service;
 
+import com.chegg.sahara.configuration.ApplicationConfiguration;
 import com.chegg.sahara.model.ChatRequest;
 import com.chegg.sahara.model.ChatResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
@@ -10,11 +10,15 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.chegg.sahara.configuration.Constants.assistantRole;
+import static com.chegg.sahara.configuration.Constants.userRole;
 
 @Service
 @Slf4j
@@ -26,39 +30,39 @@ public class AITherapistService {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    @Qualifier("systemMessage")
+    private ChatMessage systemChatMessage;
+
+    @Autowired
+    private ApplicationConfiguration applicationConfiguration;
+
     List<ChatMessage> chatMessages = new ArrayList<>();
 
     public ChatResponse chatWithAITherapist(ChatRequest chatRequest) {
         try {
+            // add system message
             if (CollectionUtils.isEmpty(chatMessages)) {
-                chatMessages.add(
-                        new ChatMessage(
-                                "system",
-                                "How are you feeling?"));
+                chatMessages.add(systemChatMessage);
             }
 
-            //build chat message
+            // build chat message
             chatMessages.add(
                     new ChatMessage(
-                            "user",
-                            "User's message:"
-                                    + chatRequest.getMessage()
-                                    + "As a therapist addressing the user, put all response in a json object with Json Key and Json Value for user"
-                                    + chatRequest.getName()
-                                    + "with context: The user is a student seeking help."
-                                    + "If user asks out of context questions, reply with Json Key: prompt, Json Value: I can not help with this right now."
-                                    + "Json Key: tips, Json Value: Provide tips for help."
-                                    + "Json Key: sentiment, Json Value: Sentiment analysis for whole conversation history in one word among (Happy, Neutral, Sad, Depressed, Low, )."
-                                    + "Json Key: questions, Json Value: Ask for relevant questions.",
+                            userRole,
+                            chatRequest.getMessage(),
                             chatRequest.getName()));
 
-            //build request
+            // build request
             ChatCompletionRequest completionRequest =
                     ChatCompletionRequest.builder()
-                            .model("gpt-3.5-turbo-16k")
+                            .model(applicationConfiguration.getAiModel())
                             .messages(chatMessages)
-                            .temperature(0.9d)
-                            .maxTokens(500)
+                            .temperature(applicationConfiguration.getAiTemp())
+                            .maxTokens(applicationConfiguration.getAiMaxTokens())
+                            .topP(applicationConfiguration.getAiTopP())
+                            .frequencyPenalty(applicationConfiguration.getAiFreqPenalty())
+                            .presencePenalty(applicationConfiguration.getAiPresencePenalty())
                             .build();
 
             //call service method for chatting with AI
@@ -70,7 +74,7 @@ public class AITherapistService {
             String content = completionChoice.getMessage().getContent();
 
             //add ai response in chat history
-            chatMessages.add(new ChatMessage("assistant", content));
+            chatMessages.add(new ChatMessage(assistantRole, content));
 
             //build chat response object with ai response
             ChatResponse chatResponse = objectMapper.readValue(content, ChatResponse.class);
@@ -81,4 +85,5 @@ public class AITherapistService {
             return new ChatResponse("Some error occurred", null, null, null);
         }
     }
+
 }
