@@ -45,11 +45,10 @@ public class AITherapistService {
                                     + chatRequest.getMessage()
                                     + "As a therapist addressing the user, put all response in a json object with Json Key and Json Value for user"
                                     + chatRequest.getName()
-                                    + ", please keep these points:"
+                                    + "with context: The user is a student seeking help."
                                     + "If user asks out of context questions, reply with Json Key: prompt, Json Value: I can not help with this right now."
-                                    + "Context: The user is a student seeking help."
                                     + "Json Key: tips, Json Value: Provide tips for help."
-                                    + "Json Key: sentiment, Json Value: Sentiment analysis for whole conversation history in one word among (Happy, Neutral, Sad, Depressed, Low)."
+                                    + "Json Key: sentiment, Json Value: Sentiment analysis for whole conversation history in one word among (Happy, Neutral, Sad, Depressed, Low, )."
                                     + "Json Key: questions, Json Value: Ask for relevant questions.",
                             chatRequest.getName()));
 
