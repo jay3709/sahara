@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="https://cdn.web.test.cheggnet.com/static/favicon-s.svg">
 
-    <title>Chegg Inc | Sahara</title>
+    <title>Chegg Inc | Happify</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -25,7 +25,7 @@
 <header>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md fixed-top">
-        <a class="navbar-brand" href="#">Sahara</a>
+        <a class="navbar-brand" href="#">Happify</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>

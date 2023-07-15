@@ -7,12 +7,12 @@
             <li class="chegg-reply">
                 <div class="chegg-reply-div">
                     <img src="img/chegg-avt.png" class="chegg-avatar">
-                    <div class="answer-div">Hi ${name},<br>How are you feeling today?</div>
+                    <div class="answer-div">Hello ${name},<br> welcome to our session today. How can I assist you in your journey towards mental well-being</div>
                 </div>
             </li>
         </ul>
     </div>
-    <div class="clear"></div>
+    <div class="clear" id="clear-div"></div>
 </main>
 
 <jsp:include page="footer.jsp"/>

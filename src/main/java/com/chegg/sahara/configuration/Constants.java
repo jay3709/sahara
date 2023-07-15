@@ -13,7 +13,7 @@ public class Constants {
     public final static String usersFeedbackOnConversation = "If user's message is like a feedback, provide proper response";
     public final static String keyRoleOfAssistant = "As a therapist,";
     public final static String taskOfAssistant = " Put all response in a json object with Json Key and Json Value.";
-    public final static String outOfContextMessage = "If user's message is out of context then reply with Json Key: prompt, Json Value: I can not help with this right now.";
+    public final static String outOfContextMessage = "If user's message is out of context then reply with Json Key: prompt, Json Value: I can not help with this right now, if there is anything through which I can make you feel better, please continue.";
     public final static String tipsMessage = "Json Key: tips, Json Value: Address user with text Dear <user's name> <newline> and provide tips for help.";
     public final static String sentimentMessage = "Json Key: sentiment, Json Value: Sentiment analysis so far in one word among ";
     public final static String questionsMessage = "Json Key: questions, Json Value: Ask for relevant questions.";

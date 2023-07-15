@@ -9,7 +9,7 @@ $(document).ready(function() {
         $.ajax({
             url: '/user/chat',
             method: "POST",
-            data: JSON.stringify({ message: currentQues, name: "sunil" }),
+            data: JSON.stringify({ message: currentQues, name: "Steve" }),
             dataType: 'json',
             contentType: "application/json",
             beforeSend: function() {
@@ -25,6 +25,8 @@ $(document).ready(function() {
                 $("#send_message").removeClass("disable-send");
                 requestInProgress =  false;
                 $("#chatArea ul").append(getCheggAnswerArea(chatResponse));
+                window.scrollTo(0,document.getElementById('chatArea').scrollHeight);
+
             },
             error(jqXHR, textStatus, errorThrown){
                 $("#send-button").html("Send");
@@ -48,17 +50,21 @@ return '<li class="user-ques">'+
   '</li>';
 }
 function getCheggAnswerArea(chatResponse){
-    var recHtml,
-        tipsHtml,
-        quesHtml;
-    if(chatResponse.sentiment != null){
-        recHtml = "<div class=\"tips-div\"> Here are some recommended videos for you <a target='_blank' href='suggested-videos/"+chatResponse.sentiment.toLowerCase()+"'>videos for you</a></div>";
+    var recHtml = '',
+        tipsHtml = '',
+        quesHtml = '',
+        promptHtml = '';
+    if(typeof(chatResponse.sentiment) !== "undefined" && chatResponse.sentiment != null){
+        var mood = chatResponse.sentiment.toLowerCase();
+        mood = (mood == 'anxiety') ? 'anxious' : mood;
+        recHtml = "<div class=\"tips-div\">It seems you are little bit "+mood+", here are some recommended <a target='_blank' href='suggested-videos/"+mood+"'>videos </a> to make you feel better</div>";
     }
-    if(chatResponse.tips != null){
+    if(typeof(chatResponse.tips) !== "undefined" && chatResponse.tips != null){
         tipsHtml = '<div class="answer-div">'+chatResponse.tips.replace(/(?:\r\n|\r|\n)/g, '<br>')+'</div>';
+    } else if(typeof(chatResponse.prompt) !== "undefined" && chatResponse.prompt != null){
+        promptHtml = '<div class="chegg-prompt-div">'+chatResponse.prompt+'</div>';
     }
-
-    if(chatResponse.questions != null){
+    if(typeof(chatResponse.questions) !== "undefined" && chatResponse.questions != null){
         quesHtml = '<div class="chegg-ques-div">'+chatResponse.questions+'</div>';
     }
     return '<li class="chegg-reply">'+
@@ -67,6 +73,7 @@ function getCheggAnswerArea(chatResponse){
                 tipsHtml+
                 quesHtml+
                 recHtml+
+                promptHtml+
             '</div>'+
         '</li>';
 }

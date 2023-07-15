@@ -17,7 +17,7 @@ public class SaharaController {
 
     @GetMapping("/")
     public String getLinks(Model model){
-        model.addAttribute("name", "Sunil");
+        model.addAttribute("name", "Steve");
         return "index";
     }
 
